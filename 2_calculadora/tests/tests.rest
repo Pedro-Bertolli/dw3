@@ -1,0 +1,59 @@
+### teste de API calculadora - soma
+POST http://localhost:40000/calculadora HTTP/1.1
+content-type: application/json
+
+{
+  "num1": 4,
+  "num2": 2,
+  "operacao": "+"
+}
+
+### teste de API calculadora - subtração
+POST http://localhost:40000/calculadora HTTP/1.1
+content-type: application/json
+
+{
+  "num1": 10,
+  "num2": 3,
+  "operacao": "-"
+}
+
+### teste de API calculadora - multiplicação
+POST http://localhost:40000/calculadora HTTP/1.1
+content-type: application/json
+
+{
+  "num1": 5,
+  "num2": 2,
+  "operacao": "*"
+}
+
+### teste de API calculadora - divisão
+POST http://localhost:40000/calculadora HTTP/1.1
+content-type: application/json
+
+{
+  "num1": 10,
+  "num2": 2,
+  "operacao": "/"
+}
+
+### teste de API calculadora - operação inválida
+POST http://localhost:40000/calculadora HTTP/1.1
+content-type: application/json
+
+{
+  "num1": 10,
+  "num2": 2,
+  "operacao": "^"
+}
+
+### teste de API calculadora - divisão por zero
+POST http://localhost:40000/calculadora HTTP/1.1
+content-type: application/json
+
+{
+  "num1": 10,
+  "num2": 0,
+  "operacao": "/"
+}
