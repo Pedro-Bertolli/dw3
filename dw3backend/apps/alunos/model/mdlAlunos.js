@@ -3,8 +3,8 @@ const db = require("../../../database/databaseConfig");
 const getAllAlunos = async () => {
   return (
     await db.query(
-      "SELECT *,(SELECT descricao from CURSOS where cursoid = alunos.cursoid)" +
-        "FROM alunos where deleted = false ORDER BY nome ASC"
+      "SELECT alunos.*, (SELECT descricao from CURSOS where cursoid = alunos.cursoid) as descricao " +
+      "FROM alunos where deleted = false ORDER BY nome ASC"
     )
   ).rows;
 };
@@ -12,15 +12,14 @@ const getAllAlunos = async () => {
 const getAlunoByID = async (alunoIDPar) => {
   return (
     await db.query(
-      "SELECT *, (SELECT descricao from CURSOS where cursoid = alunos.cursoid)" +
-        "FROM alunos WHERE alunoid = $1 and deleted = false ORDER BY nome ASC",
+      "SELECT alunos.*, (SELECT descricao from CURSOS where cursoid = alunos.cursoid) as descricao " +
+      "FROM alunos WHERE alunoid = $1 and deleted = false ORDER BY nome ASC",
       [alunoIDPar]
     )
   ).rows;
 };
 
 const insertAlunos = async (alunoREGPar) => {
-  //@ Atenção: aqui já começamos a utilizar a variável msg para retornor erros de banco de dados.
   let linhasAfetadas;
   let msg = "ok";
   try {
@@ -39,14 +38,14 @@ const insertAlunos = async (alunoREGPar) => {
       )
     ).rowCount;
   } catch (error) {
-    msg = "[mdlAlunos|insertAlunos] " + error.detail;
+    msg = "[mdlAlunos|insertAlunos] " + error.message;
     linhasAfetadas = -1;
   }
 
   return { msg, linhasAfetadas };
 };
 
-const UpdateAlunos = async (alunoREGPar) => {
+const updateAlunos = async (alunoREGPar) => {
   let linhasAfetadas;
   let msg = "ok";
   try {
@@ -74,14 +73,15 @@ const UpdateAlunos = async (alunoREGPar) => {
       )
     ).rowCount;
   } catch (error) {
-    msg = "[mdlAlunos|insertAlunos] " + error.detail;
+    msg = "[mdlAlunos|UpdateAlunos] " + error.message;
     linhasAfetadas = -1;
   }
 
   return { msg, linhasAfetadas };
 };
 
-const DeleteAlunos = async (alunoREGPar) => {
+// CORREÇÃO AQUI: A função agora recebe um 'alunoID' diretamente.
+const deleteAlunos = async (alunoIDPar) => {
   let linhasAfetadas;
   let msg = "ok";
     
@@ -89,11 +89,12 @@ const DeleteAlunos = async (alunoREGPar) => {
     linhasAfetadas = (
     await db.query(
       "UPDATE alunos SET " + "deleted = true " + "WHERE alunoid = $1",
-      [alunoREGPar.alunoid]
+      // CORREÇÃO AQUI: Usa o ID recebido diretamente.
+      [alunoIDPar]
     )
   ).rowCount;
 } catch (error) {
-  msg = "[mdlAlunos|insertAlunos] " + error.detail;
+  msg = "[mdlAlunos|DeleteAlunos] " + error.message;
   linhasAfetadas = -1;
 }
 
@@ -104,6 +105,6 @@ module.exports = {
   getAllAlunos,
   getAlunoByID,
   insertAlunos,
-  UpdateAlunos,
-  DeleteAlunos,
+  updateAlunos,
+  deleteAlunos,
 };

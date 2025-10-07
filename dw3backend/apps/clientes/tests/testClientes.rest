@@ -7,42 +7,43 @@ content-type: application/json
     "username": "qwe",
     "password": "qwe"
 }
+
 ### Seta o token
-@accessToken = {{loginAutenticado.response.body.$.token}}
+@accessToken = {{loginAutenticado.response.body.token}}
 
 ### teste de buscar todos os clientes
-GET http://localhost:40000/GetAllClientes HTTP/1.1
+GET http://localhost:40000/getAllClientes HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
 ### teste de buscar cliente por ID
-POST http://localhost:40000/GetClienteByID HTTP/1.1
+POST http://localhost:40000/getClienteByID HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-    "clienteid": 1
+    "clienteid": 8
 }
 
 ### teste de inserção de cliente
-POST http://localhost:40000/InsertClientes HTTP/1.1
+POST http://localhost:40000/insertCliente HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-    "codigo": "CLI-TESTE",
+    "codigo": "CLI-TESTE4",
     "nome": "Cliente de Teste REST",
-    "endereco": "Rua API, 123",
+    "endereco": "Rua AHI, 126",
     "ativo": true
 }
 
 ### teste de atualização de cliente
-POST http://localhost:40000/UpdateClientes HTTP/1.1
+POST http://localhost:40000/updateCliente HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-    "clienteid": 3,
+    "clienteid": 1,
     "codigo": "CLI-TESTE-UPD",
     "nome": "Cliente de Teste REST Alterado",
     "endereco": "Rua API, 321",
@@ -50,10 +51,10 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### teste de deleção de cliente
-POST http://localhost:40000/DeleteClientes HTTP/1.1
+POST http://localhost:40000/deleteCliente HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-    "clienteid": 3
+    "clienteid": 2
 }

@@ -1,6 +1,7 @@
 const db = require("../../../database/databaseConfig");
 
-const GetAllCursos = async () => {
+// CORREÇÃO AQUI: de 'GetAllCursos' para 'getAllCursos'
+const getAllCursos = async () => {
   return (
     await db.query(
       "SELECT * " + "FROM cursos where deleted = false ORDER BY descricao ASC"
@@ -8,7 +9,8 @@ const GetAllCursos = async () => {
   ).rows;
 };
 
-const GetCursoByID = async (cursoIDPar) => {
+// CORREÇÃO AQUI: de 'GetCursoByID' para 'getCursoByID'
+const getCursoByID = async (cursoIDPar) => {
   return (
     await db.query(
       "SELECT * " +
@@ -18,7 +20,8 @@ const GetCursoByID = async (cursoIDPar) => {
   ).rows;
 };
 
-const InsertCursos = async (registroPar) => {
+// CORREÇÃO AQUI: de 'InsertCursos' para 'insertCursos'
+const insertCursos = async (registroPar) => {
   //@ Atenção: aqui já começamos a utilizar a variável msg para retornor erros de banco de dados.
   let linhasAfetadas;
   let msg = "ok";
@@ -42,7 +45,8 @@ const InsertCursos = async (registroPar) => {
   return { msg, linhasAfetadas };
 };
 
-const UpdateCursos = async (registroPar) => {
+// CORREÇÃO AQUI: de 'UpdateCursos' para 'updateCursos'
+const updateCursos = async (registroPar) => {
   let linhasAfetadas;
   let msg = "ok";
   try {
@@ -52,14 +56,14 @@ const UpdateCursos = async (registroPar) => {
           "codigo = $2, " +
           "descricao = $3, " +
           "ativo = $4, " +
-          "deleted = $5 " +          
+          "deleted = $5 " +
           "WHERE cursoid = $1",
         [
-            registroPar.cursoid  ,
-            registroPar.codigo   ,
+            registroPar.cursoid,
+            registroPar.codigo,
             registroPar.descricao,
-            registroPar.ativo    ,
-            registroPar.deleted  ,          
+            registroPar.ativo,
+            registroPar.deleted,
         ]
       )
     ).rowCount;
@@ -71,11 +75,11 @@ const UpdateCursos = async (registroPar) => {
   return { msg, linhasAfetadas };
 };
 
-
-const DeleteCursos = async (registroPar) => {
+// CORREÇÃO AQUI: de 'DeleteCursos' para 'deleteCursos'
+const deleteCursos = async (registroPar) => {
   let linhasAfetadas;
   let msg = "ok";
-    
+
   try {
     linhasAfetadas = (
     await db.query(
@@ -91,11 +95,11 @@ const DeleteCursos = async (registroPar) => {
 return { msg, linhasAfetadas };
 };
 
-
+// CORREÇÃO AQUI: Nomes atualizados para exportação
 module.exports = {
-  GetAllCursos,
-  GetCursoByID,
-  InsertCursos,
-  UpdateCursos,
-  DeleteCursos,
+  getAllCursos,
+  getCursoByID,
+  insertCursos,
+  updateCursos,
+  deleteCursos,
 };

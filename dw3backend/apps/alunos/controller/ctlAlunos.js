@@ -1,52 +1,53 @@
+// Arquivo: apps/alunos/controller/ctlAlunos.js
+
 const mdlAlunos = require("../model/mdlAlunos");
 
-const getAllAlunos = (req, res) =>
-  (async () => {
+const getAllAlunos = (req, res) => (async () => {
     let registro = await mdlAlunos.getAllAlunos();
-    for (let i = 0; i < registro.length; i++) {
-      const row = registro[i]; // Current row      
-      const formattedDate = row.datanascimento.toISOString().split('T')[0];
-      row.datanascimento = formattedDate;
-      
-    }
-    res.json({ status: "ok", "registro": registro });
-  })();
+    res.json({ status: "ok", registro: registro });
+})();
 
-const getAlunoByID = (req, res) =>
-  (async () => {
+const getAlunoByID = (req, res) => (async () => {
     const alunoID = parseInt(req.body.alunoid);
     let registro = await mdlAlunos.getAlunoByID(alunoID);
+    res.json({ status: "ok", registro: registro });
+})();
 
+const insertAlunos = (req, res) => (async () => {
+    const registro = req.body;
+    
+    if (registro.datanascimento === '') {
+        registro.datanascimento = null;
+    }
+    if (registro.cursoid === '') {
+        registro.cursoid = null;
+    }
+    
+    let { msg, linhasAfetadas } = await mdlAlunos.insertAlunos(registro);
+    res.json({ status: msg, linhasAfetadas: linhasAfetadas });
+})();
 
-    res.json({ status: "ok", "registro": registro });
-  })();
+// CORREÇÃO APLICADA AQUI
+const updateAlunos = (req, res) => (async () => {
+    const registro = req.body;
+    
+    // A linha abaixo foi descomentada para chamar o model e salvar as alterações.
+    let { msg, linhasAfetadas } = await mdlAlunos.updateAlunos(registro); 
+    
+    // A resposta agora reflete o resultado da operação no banco de dados.
+    res.json({ status: msg, linhasAfetadas: linhasAfetadas });
+})();
 
-const insertAlunos = (request, res) =>
-  (async () => {
-    //@ Atenção: aqui já começamos a utilizar a variável msg para retornar erros de banco de dados.
-    const alunoREG = request.body;
-    let { msg, linhasAfetadas } = await mdlAlunos.insertAlunos(alunoREG);
-    res.json({ "status": msg, "linhasAfetadas": linhasAfetadas });
-  })();
-
-const updateAlunos = (request, res) =>
-  (async () => {
-    const alunoREG = request.body;
-    let { msg, linhasAfetadas } = await mdlAlunos.UpdateAlunos(alunoREG);
-    res.json({ "status": msg, "linhasAfetadas": linhasAfetadas });
-  })();
-
-const DeleteAlunos = (request, res) =>
-  (async () => {
-    const alunoREG = request.body;
-    let { msg, linhasAfetadas } = await mdlAlunos.DeleteAlunos(alunoREG);
-    res.json({ "status": msg, "linhasAfetadas": linhasAfetadas });
-  })();
+const deleteAlunos = (req, res) => (async () => {
+    // O controller envia apenas o ID para o model
+    let { msg, linhasAfetadas } = await mdlAlunos.deleteAlunos(req.body.alunoid);
+    res.json({ status: msg, linhasAfetadas: linhasAfetadas });
+})();
 
 module.exports = {
-  getAllAlunos,
-  getAlunoByID,
-  insertAlunos,
-  updateAlunos,
-  DeleteAlunos
+    getAllAlunos,
+    getAlunoByID,
+    insertAlunos,
+    updateAlunos,
+    deleteAlunos,
 };

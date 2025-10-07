@@ -1,111 +1,93 @@
-const db = require("../../../database/databaseConfig");
+// Arquivo: apps/pedidos/model/mdlPedidos.js
 
-// ANTES: getAllClientes
+const db = require("../../../database/databaseconfig");
+
 const getAllPedidos = async () => {
   return (
     await db.query(
-      // ALTERADO: Tabela e ordenação
-      "SELECT * FROM pedidos where deleted = false ORDER BY data DESC"
+      `SELECT p.*, c.nome as nome_cliente 
+       FROM pedidos p 
+       JOIN clientes c ON (c.clienteid = p.clienteid) 
+       WHERE p.deleted = false ORDER BY p.pedidoid DESC`
     )
   ).rows;
 };
 
-// ANTES: getClienteByID
 const getPedidoByID = async (pedidoIDPar) => {
   return (
     await db.query(
-      // ALTERADO: Tabela, chave primária e parâmetro
-      "SELECT * FROM pedidos WHERE pedidoid = $1 and deleted = false",
+      "SELECT * FROM pedidos WHERE pedidoid = $1 AND deleted = false",
       [pedidoIDPar]
     )
   ).rows;
 };
 
-// ANTES: insertClientes
-const insertPedidos = async (registroPar) => {
+const insertPedido = async (pedidoREGPar) => {
   let linhasAfetadas;
   let msg = "ok";
   try {
     linhasAfetadas = (
       await db.query(
-        // ALTERADO: Tabela e colunas (numero, data, valortotal, clienteid)
-        "INSERT INTO pedidos (numero, data, valortotal, clienteid, deleted) " + 
-        "values($1, $2, $3, $4, false)",
+        "INSERT INTO pedidos (numero, data, valortotal, clienteid) VALUES ($1, $2, $3, $4) RETURNING pedidoid",
         [
-          registroPar.numero,
-          registroPar.data,
-          registroPar.valortotal,
-          registroPar.clienteid,
+          pedidoREGPar.numero,
+          pedidoREGPar.data,
+          pedidoREGPar.valortotal,
+          pedidoREGPar.clienteid,
         ]
       )
-    ).rowCount;
+    ).rows[0].pedidoid;
   } catch (error) {
-    // ALTERADO: Mensagem de erro para o contexto de pedidos
-    msg = "[mdlPedidos|insertPedidos] " + error.detail;
+    msg = "[mdlPedidos|insertPedido] " + error.detail;
     linhasAfetadas = -1;
   }
-
   return { msg, linhasAfetadas };
 };
 
-// ANTES: updateClientes
-const updatePedidos = async (registroPar) => {
+const updatePedido = async (pedidoREGPar) => {
   let linhasAfetadas;
   let msg = "ok";
   try {
     linhasAfetadas = (
       await db.query(
-        // ALTERADO: Tabela, colunas e chave primária
-        "UPDATE pedidos SET " +
-          "numero = $2, " +
-          "data = $3, " +
-          "valortotal = $4, " +
-          "clienteid = $5 " +          
-          "WHERE pedidoid = $1",
+        "UPDATE pedidos SET numero=$1, data=$2, valortotal=$3, clienteid=$4 WHERE pedidoid=$5",
         [
-            registroPar.pedidoid,
-            registroPar.numero,
-            registroPar.data,
-            registroPar.valortotal,
-            registroPar.clienteid,        
+          pedidoREGPar.numero,
+          pedidoREGPar.data,
+          pedidoREGPar.valortotal,
+          pedidoREGPar.clienteid,
+          pedidoREGPar.pedidoid,
         ]
       )
     ).rowCount;
   } catch (error) {
-    // ALTERADO: Mensagem de erro para o contexto de pedidos
-    msg = "[mdlPedidos|updatePedidos] " + error.detail;
+    msg = "[mdlPedidos|updatePedido] " + error.detail;
     linhasAfetadas = -1;
   }
-
   return { msg, linhasAfetadas };
 };
 
-// ANTES: deleteClientes
-const deletePedidos = async (registroPar) => {
+const deletePedido = async (pedidoIDPar) => {
   let linhasAfetadas;
   let msg = "ok";
   try {
     linhasAfetadas = (
-    await db.query(
-      // ALTERADO: Tabela e chave primária
-      "UPDATE pedidos SET deleted = true WHERE pedidoid = $1",
-      [registroPar.pedidoid]
-    )
-  ).rowCount;
-} catch (error) {
-  // ALTERADO: Mensagem de erro para o contexto de pedidos
-  msg = "[mdlPedidos|deletePedidos] " + error.detail;
-  linhasAfetadas = -1;
-}
-
-return { msg, linhasAfetadas };
+      await db.query("UPDATE pedidos SET deleted=true WHERE pedidoid=$1", [
+        pedidoIDPar,
+      ])
+    ).rowCount;
+  } catch (error) {
+    msg = "[mdlPedidos|deletePedido] " + error.detail;
+    linhasAfetadas = -1;
+  }
+  return { msg, linhasAfetadas };
 };
 
+// Bloco de exportação completo e correto
 module.exports = {
-  // ALTERADO: Nomes das funções exportadas
   getAllPedidos,
   getPedidoByID,
-  insertPedidos,
-  updatePedidos,
-  deletePedidos,
+  insertPedido,
+  updatePedido,
+  deletePedido,
 };

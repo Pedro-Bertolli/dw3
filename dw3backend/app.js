@@ -2,6 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
+console.log('--- INICIANDO SERVIDOR ---');
+console.log('CONECTANDO AO BANCO:', process.env.DB_NAME, 'EM', process.env.DB_HOST);
+
 const router = require('./routes/router');
  
 const app = express();

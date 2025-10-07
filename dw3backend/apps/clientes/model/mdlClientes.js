@@ -1,111 +1,90 @@
-const db = require("../../../database/databaseConfig");
+// Arquivo: apps/clientes/model/mdlClientes.js
 
-// ANTES: GetAllCursos
+const db = require("../../../database/databaseconfig");
+
 const getAllClientes = async () => {
   return (
     await db.query(
-      // ALTERADO: Tabela e ordenação
-      "SELECT * FROM clientes where deleted = false ORDER BY nome ASC"
+      "SELECT * FROM clientes WHERE deleted = false ORDER BY clienteid DESC"
     )
   ).rows;
 };
 
-// ANTES: GetCursoByID
 const getClienteByID = async (clienteIDPar) => {
   return (
     await db.query(
-      // ALTERADO: Tabela, chave primária e parâmetro
-      "SELECT * FROM clientes WHERE clienteid = $1 and deleted = false ORDER BY nome ASC",
+      "SELECT * FROM clientes WHERE clienteid = $1 AND deleted = false",
       [clienteIDPar]
     )
   ).rows;
 };
 
-// ANTES: InsertCursos
-const insertClientes = async (registroPar) => {
+const insertCliente = async (clienteREGPar) => {
   let linhasAfetadas;
   let msg = "ok";
   try {
     linhasAfetadas = (
       await db.query(
-        // ALTERADO: Tabela, colunas e valores. Note que é mais seguro listar as colunas.
-        "INSERT INTO clientes (codigo, nome, endereco, ativo, deleted) " + 
-        "values($1, $2, $3, $4, false)",
+        "INSERT INTO clientes (codigo, nome, endereco, ativo) VALUES ($1, $2, $3, $4) RETURNING clienteid",
         [
-          registroPar.codigo,
-          registroPar.nome,
-          registroPar.endereco,
-          registroPar.ativo,
+          clienteREGPar.codigo,
+          clienteREGPar.nome,
+          clienteREGPar.endereco,
+          clienteREGPar.ativo,
         ]
       )
-    ).rowCount;
+    ).rows[0].clienteid;
   } catch (error) {
-    // ALTERADO: Mensagem de erro para o contexto de clientes
-    msg = "[mdlClientes|insertClientes] " + error.detail;
+    msg = "[mdlClientes|insertCliente] " + error.detail;
     linhasAfetadas = -1;
   }
-
   return { msg, linhasAfetadas };
 };
 
-// ANTES: UpdateCursos
-const updateClientes = async (registroPar) => {
+const updateCliente = async (clienteREGPar) => {
   let linhasAfetadas;
   let msg = "ok";
   try {
     linhasAfetadas = (
       await db.query(
-        // ALTERADO: Tabela, colunas e chave primária
-        "UPDATE clientes SET " +
-          "codigo = $2, " +
-          "nome = $3, " +
-          "endereco = $4, " +
-          "ativo = $5 " +          
-          "WHERE clienteid = $1",
+        "UPDATE clientes SET codigo=$1, nome=$2, endereco=$3, ativo=$4 WHERE clienteid=$5",
         [
-            registroPar.clienteid,
-            registroPar.codigo,
-            registroPar.nome,
-            registroPar.endereco,
-            registroPar.ativo,        
+          clienteREGPar.codigo,
+          clienteREGPar.nome,
+          clienteREGPar.endereco,
+          clienteREGPar.ativo,
+          clienteREGPar.clienteid,
         ]
       )
     ).rowCount;
   } catch (error) {
-    // ALTERADO: Mensagem de erro para o contexto de clientes
-    msg = "[mdlClientes|UpdateClientes] " + error.detail;
+    msg = "[mdlClientes|updateCliente] " + error.detail;
     linhasAfetadas = -1;
   }
-
   return { msg, linhasAfetadas };
 };
 
-// ANTES: DeleteCursos
-const deleteClientes = async (registroPar) => {
+const deleteCliente = async (clienteIDPar) => {
   let linhasAfetadas;
   let msg = "ok";
   try {
     linhasAfetadas = (
-    await db.query(
-      // ALTERADO: Tabela e chave primária
-      "UPDATE clientes SET deleted = true WHERE clienteid = $1",
-      [registroPar.clienteid] // Usando diretamente o ID do cliente
-    )
-  ).rowCount;
-} catch (error) {
-  // ALTERADO: Mensagem de erro para o contexto de clientes
-  msg = "[mdlClientes|DeleteClientes] " + error.detail;
-  linhasAfetadas = -1;
-}
-
-return { msg, linhasAfetadas };
+      await db.query("UPDATE clientes SET deleted=true WHERE clienteid=$1", [
+        clienteIDPar,
+      ])
+    ).rowCount;
+  } catch (error) {
+    msg = "[mdlClientes|deleteCliente] " + error.detail;
+    linhasAfetadas = -1;
+  }
+  return { msg, linhasAfetadas };
 };
 
+// Bloco de exportação completo e correto
 module.exports = {
-  // ALTERADO: Nomes das funções exportadas
   getAllClientes,
   getClienteByID,
-  insertClientes,
-  updateClientes,
-  deleteClientes,
+  insertCliente,
+  updateCliente,
+  deleteCliente,
 };

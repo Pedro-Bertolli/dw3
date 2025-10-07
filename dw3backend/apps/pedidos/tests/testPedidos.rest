@@ -7,53 +7,54 @@ content-type: application/json
     "username": "qwe",
     "password": "qwe"
 }
+
 ### Seta o token
-@accessToken = {{loginAutenticado.response.body.$.token}}
+@accessToken = {{loginAutenticado.response.body.token}}
 
 ### teste de buscar todos os pedidos
-GET http://localhost:40000/GetAllPedidos HTTP/1.1
+GET http://localhost:40000/getAllPedidos HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
 ### teste de buscar pedido por ID
-POST http://localhost:40000/GetPedidoByID HTTP/1.1
+POST http://localhost:40000/getPedidoByID HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-    "pedidoid": 1
+    "pedidoid": 9
 }
 
 ### teste de inserção de pedido
-POST http://localhost:40000/InsertPedidos HTTP/1.1
+POST http://localhost:40000/insertPedido HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-    "numero": 1001,
+    "numero": 1998,
     "data": "2025-09-16",
-    "valortotal": 150.75,
-    "clienteid": 1
+    "valortotal": 134.00,
+    "clienteid": 4
 }
 
 ### teste de atualização de pedido
-POST http://localhost:40000/UpdatePedidos HTTP/1.1
+POST http://localhost:40000/updatePedido HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-    "pedidoid": 2,
-    "numero": 1001,
+    "pedidoid": 9,
+    "numero": 1654,
     "data": "2025-09-17",
-    "valortotal": 250.00,
-    "clienteid": 2
+    "valortotal": 259.00,
+    "clienteid": 1
 }
 
 ### teste de deleção de pedido
-POST http://localhost:40000/DeletePedidos HTTP/1.1
+POST http://localhost:40000/deletePedido HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-    "pedidoid": 2
+    "pedidoid": 9
 }

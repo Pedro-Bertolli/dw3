@@ -16,33 +16,33 @@ routerApp.get("/", (req, res) => {
   res.send("Olá mundo!");
 });
 
-// Rotas de Alunos
+// Rotas de Alunos (Corrigido para camelCase)
 routerApp.get("/getAllAlunos", appAlunos.getAllAlunos);
 routerApp.post("/getAlunoByID", appLogin.AutenticaJWT, appAlunos.getAlunoByID);
 routerApp.post("/insertAlunos", appLogin.AutenticaJWT, appAlunos.insertAlunos);
-routerApp.post("/updateAlunos", appAlunos.updateAlunos);
-routerApp.post("/DeleteAlunos", appAlunos.DeleteAlunos);
+routerApp.post("/updateAlunos", appLogin.AutenticaJWT, appAlunos.updateAlunos); // Adicionado JWT para consistência
+routerApp.post("/deleteAlunos", appLogin.AutenticaJWT, appAlunos.deleteAlunos); // Corrigido para camelCase
 
-// Rotas de Cursos
-routerApp.get("/GetAllCursos", appCursos.GetAllCursos);
-routerApp.post("/GetCursoByID", appCursos.GetCursoByID);
-routerApp.post("/InsertCursos", appCursos.InsertCursos);
-routerApp.post("/UpdateCursos", appCursos.UpdateCursos);
-routerApp.post("/DeleteCursos", appCursos.DeleteCursos);
+// Rotas de Cursos (Corrigido para camelCase)
+routerApp.get("/getAllCursos", appCursos.getAllCursos);
+routerApp.post("/getCursoByID", appCursos.getCursoByID);
+routerApp.post("/insertCursos", appCursos.insertCursos);
+routerApp.post("/updateCursos", appCursos.updateCursos);
+routerApp.post("/deleteCursos", appCursos.deleteCursos);
 
-// Rotas de Clientes
-routerApp.get("/GetAllClientes", appLogin.AutenticaJWT, appClientes.getAllClientes);
-routerApp.post("/GetClienteByID", appLogin.AutenticaJWT, appClientes.getClienteByID);
-routerApp.post("/InsertClientes", appLogin.AutenticaJWT, appClientes.insertClientes);
-routerApp.post("/UpdateClientes", appLogin.AutenticaJWT, appClientes.updateClientes);
-routerApp.post("/DeleteClientes", appLogin.AutenticaJWT, appClientes.deleteClientes);
+// Rotas de Clientes (Corrigido para camelCase e singular)
+routerApp.get("/getAllClientes", appLogin.AutenticaJWT, appClientes.getAllClientes);
+routerApp.post("/getClienteByID", appLogin.AutenticaJWT, appClientes.getClienteByID);
+routerApp.post("/insertCliente", appLogin.AutenticaJWT, appClientes.insertCliente);
+routerApp.post("/updateCliente", appLogin.AutenticaJWT, appClientes.updateCliente);
+routerApp.post("/deleteCliente", appLogin.AutenticaJWT, appClientes.deleteCliente);
 
-// Rotas de Pedidos
-routerApp.get("/GetAllPedidos", appLogin.AutenticaJWT, appPedidos.getAllPedidos);
-routerApp.post("/GetPedidoByID", appLogin.AutenticaJWT, appPedidos.getPedidoByID);
-routerApp.post("/InsertPedidos", appLogin.AutenticaJWT, appPedidos.insertPedidos);
-routerApp.post("/UpdatePedidos", appLogin.AutenticaJWT, appPedidos.updatePedidos);
-routerApp.post("/DeletePedidos", appLogin.AutenticaJWT, appPedidos.deletePedidos);
+// Rotas de Pedidos (Corrigido para camelCase e singular)
+routerApp.get("/getAllPedidos", appLogin.AutenticaJWT, appPedidos.getAllPedidos);
+routerApp.post("/getPedidoByID", appLogin.AutenticaJWT, appPedidos.getPedidoByID);
+routerApp.post("/insertPedido", appLogin.AutenticaJWT, appPedidos.insertPedido);
+routerApp.post("/updatePedido", appLogin.AutenticaJWT, appPedidos.updatePedido);
+routerApp.post("/deletePedido", appLogin.AutenticaJWT, appPedidos.deletePedido);
 
 // Rota Login
 routerApp.post("/Login", appLogin.Login);

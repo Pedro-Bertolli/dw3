@@ -1,56 +1,41 @@
-// ALTERADO: Importar o model correto
+// Arquivo: apps/pedidos/controller/ctlPedidos.js
+
 const mdlPedidos = require("../model/mdlPedidos");
 
-// ANTES: getAllClientes
-const getAllPedidos = (req, res) =>
-  (async () => {
-    // ALTERADO: Chamar a função do model de pedidos
+const getAllPedidos = (req, res) => (async () => {
     let registro = await mdlPedidos.getAllPedidos();
     res.json({ status: "ok", registro: registro });
-  })();
+})();
 
-// ANTES: getClienteByID
-const getPedidoByID = (req, res) =>
-  (async () => {
-    // ALTERADO: Parâmetro para pedidoid
+const getPedidoByID = (req, res) => (async () => {
     const pedidoID = parseInt(req.body.pedidoid);
-    // ALTERADO: Chamar a função do model de pedidos
     let registro = await mdlPedidos.getPedidoByID(pedidoID);
     res.json({ status: "ok", registro: registro });
-  })();
+})();
 
-// ANTES: insertClientes
-const insertPedidos = (request, res) =>
-  (async () => {
-    const registro = request.body;
-    // ALTERADO: Chamar a função do model de pedidos
-    let { msg, linhasAfetadas } = await mdlPedidos.insertPedidos(registro);
+const insertPedido = (req, res) => (async () => {
+    const registro = req.body;
+    let { msg, linhasAfetadas } = await mdlPedidos.insertPedido(registro);
     res.json({ status: msg, linhasAfetadas: linhasAfetadas });
-  })();
+})();
 
-// ANTES: updateClientes
-const updatePedidos = (request, res) =>
-  (async () => {
-    const registro = request.body;
-    // ALTERADO: Chamar a função do model de pedidos
-    let { msg, linhasAfetadas } = await mdlPedidos.updatePedidos(registro);
+const updatePedido = (req, res) => (async () => {
+    const registro = req.body;
+    let { msg, linhasAfetadas } = await mdlPedidos.updatePedido(registro);
     res.json({ status: msg, linhasAfetadas: linhasAfetadas });
-  })();
+})();
 
-// ANTES: deleteClientes
-const deletePedidos = (request, res) =>
-  (async () => {
-    const registro = request.body;
-    // ALTERADO: Chamar a função do model de pedidos
-    let { msg, linhasAfetadas } = await mdlPedidos.deletePedidos(registro);
+const deletePedido = (req, res) => (async () => {
+    const registro = req.body;
+    let { msg, linhasAfetadas } = await mdlPedidos.deletePedido(registro.pedidoid);
     res.json({ status: msg, linhasAfetadas: linhasAfetadas });
-  })();
+})();
 
+// Bloco de exportação completo e correto
 module.exports = {
-  // ALTERADO: Nomes das funções exportadas
-  getAllPedidos,
-  getPedidoByID,
-  insertPedidos,
-  updatePedidos,
-  deletePedidos,
+    getAllPedidos,
+    getPedidoByID,
+    insertPedido,
+    updatePedido,
+    deletePedido,
 };

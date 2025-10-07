@@ -1,44 +1,41 @@
+// Arquivo: apps/cursos/controller/ctlCursos.js
+
 const mdlCursos = require("../model/mdlCursos");
 
-const GetAllCursos = (req, res) =>
-  (async () => {
-    let registro = await mdlCursos.GetAllCursos();
+const getAllCursos = (req, res) => (async () => {
+    let registro = await mdlCursos.getAllCursos();
     res.json({ status: "ok", registro: registro });
-  })();
+})();
 
-const GetCursoByID = (req, res) =>
-  (async () => {
+const getCursoByID = (req, res) => (async () => {
     const cursoID = parseInt(req.body.cursoid);
-    let registro = await mdlCursos.GetCursoByID(cursoID);
-
+    let registro = await mdlCursos.getCursoByID(cursoID);
     res.json({ status: "ok", registro: registro });
-  })();
+})();
 
-const InsertCursos = (request, res) =>
-  (async () => {
-    //@ Atenção: aqui já começamos a utilizar a variável msg para retornar erros de banco de dados.
-    const registro = request.body;
-    let { msg, linhasAfetadas } = await mdlCursos.InsertCursos(registro);
+const insertCursos = (req, res) => (async () => {
+    const registro = req.body;
+    let { msg, linhasAfetadas } = await mdlCursos.insertCursos(registro);
     res.json({ status: msg, linhasAfetadas: linhasAfetadas });
-  })();
+})();
 
-const UpdateCursos = (request, res) =>
-  (async () => {
-    const registro = request.body;
-    let { msg, linhasAfetadas } = await mdlCursos.UpdateCursos(registro);
-    res.json({ status: msg, linhasAfetadas: linhasAfetadas });
-  })();
+const updateCursos = (req, res) => (async () => {
+    const registro = req.body;
+    // let { msg, linhasAfetadas } = await mdlCursos.updateCursos(registro);
+    res.json({ status: "ok", registro: registro });
+})();
 
-const DeleteCursos = (request, res) =>
-  (async () => {
-    const registro = request.body;
-    let { msg, linhasAfetadas } = await mdlCursos.DeleteCursos(registro);
+const deleteCursos = (req, res) => (async () => {
+    const registro = req.body;
+    let { msg, linhasAfetadas } = await mdlCursos.deleteCursos(registro.cursoid);
     res.json({ status: msg, linhasAfetadas: linhasAfetadas });
-  })();
+})();
+
+// Bloco de exportação completo e correto
 module.exports = {
-  GetAllCursos,
-  GetCursoByID,
-  InsertCursos,
-  UpdateCursos,
-  DeleteCursos
+    getAllCursos,
+    getCursoByID,
+    insertCursos,
+    updateCursos,
+    deleteCursos,
 };
